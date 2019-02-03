@@ -12,6 +12,7 @@ import Controls from './components/controls';
 // Helpers
 import Geometry from './helpers/geometry';
 import Stats from './helpers/stats';
+import Slicer from './helpers/slicer';
 
 // Model
 import Texture from './model/texture';
@@ -20,6 +21,9 @@ import Model from './model/model';
 // Managers
 import Interaction from './managers/interaction';
 import DatGUI from './managers/datGUI';
+
+// Slice
+
 
 // data
 import Config from './../data/config';
@@ -56,9 +60,9 @@ export default class Main {
     lights.forEach((light) => this.light.place(light));
 
     // Create and place geo in scene
-    this.geometry = new Geometry(this.scene);
-    this.geometry.make('plane')(150, 150, 10, 10);
-    this.geometry.place([0, -20, 0], [Math.PI / 2, 0, 0]);
+    // this.geometry = new Geometry(this.scene);
+    // this.geometry.make('plane')(150, 150, 10, 10);
+    // this.geometry.place([0, -20, 0], [Math.PI / 2, 0, 0]);
 
     // Set up rStats if dev environment
     if(Config.isDev && Config.isShowingStats) {
@@ -68,6 +72,7 @@ export default class Main {
 
     // Instantiate texture class
     this.texture = new Texture();
+		// debugger;
 
     // Start loading the textures and then go on to load the model after the texture Promises have resolved
     this.texture.load().then(() => {
@@ -77,7 +82,7 @@ export default class Main {
       this.model = new Model(this.scene, this.manager, this.texture.textures);
       this.model.load();
 
-      // onProgress callback
+			// onProgress callback
       this.manager.onProgress = (item, loaded, total) => {
         console.log(`${item}: ${loaded} ${total}`);
       };
@@ -87,9 +92,12 @@ export default class Main {
         // Set up interaction manager with the app now that the model is finished loading
         new Interaction(this.renderer.threeRenderer, this.scene, this.camera.threeCamera, this.controls.threeControls);
 
+				// Load slicer
+        this.slicer = new Slicer(this.scene);
+
         // Add dat.GUI controls if dev
         if(Config.isDev) {
-          new DatGUI(this, this.model.obj);
+          // new DatGUI(this, this.model.obj);
         }
 
         // Everything is now fully loaded

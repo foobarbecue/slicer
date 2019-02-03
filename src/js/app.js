@@ -18,7 +18,8 @@ function init() {
     Detector.addGetWebGLMessage();
   } else {
     const container = document.getElementById('appContainer');
-    new Main(container);
+		const mainInstance = new Main(container);
+		console.log(mainInstance);
   }
 }
 

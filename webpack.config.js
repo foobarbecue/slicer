@@ -15,7 +15,7 @@ let outputPath = path.join(__dirname, 'src/public/js');
 
 module.exports = env => {
   // Dev environment
-  let devtool = 'eval';
+  let devtool = 'source-map';
   let mode = 'development';
   let stats = 'minimal';
   let plugins = [

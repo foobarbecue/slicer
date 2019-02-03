@@ -19,6 +19,7 @@
   "dependencies": {
     "es6-promise": "^4.2.5",
     "three": "^0.100.0",
+    "threejs-slice-geometry": "^0.2.2",
     "tween.js": "^16.6.0"
   },
   "devDependencies": {
