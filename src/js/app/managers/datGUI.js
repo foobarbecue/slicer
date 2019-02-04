@@ -8,6 +8,7 @@ export default class DatGUI {
     this.camera = main.camera.threeCamera;
     this.controls = main.controls.threeControls;
     this.light = main.light;
+    this.slicer = main.slicer;
 
     /* Global */
     //gui.close();
@@ -79,6 +80,11 @@ export default class DatGUI {
     meshFolder.add(Config.mesh, 'wireframe', true).name('Wireframe').onChange((value) => {
       mesh.material.wireframe = value;
     });
+
+    /* Slicing */
+    const sliceFolder = gui.addFolder('Cross sections');
+    sliceFolder.add(Config.slicer, 'posY');
+		sliceFolder.add({sliceit: main.slicer.compute}, 'sliceit');
 
 
     /* Lights */

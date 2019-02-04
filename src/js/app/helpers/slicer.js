@@ -14,6 +14,7 @@ export default class Slicer{
 	const slicer = this;
 	slicer.scene = scene;
 	slicer.tolerance = 0.001;
+	this.compute = this.compute.bind(this);
 		const planeGeom = new THREE.PlaneGeometry(30, 30);
 		planeGeom.rotateX(-Math.PI / 2);
 		slicer.plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({
@@ -55,7 +56,7 @@ export default class Slicer{
 		// slicer.drawIntersectionPoints();
 	}
 
-	drawIntersectionPoints() {
+	compute(){
 		const slicer = this;
 		const mathPlane = new THREE.Plane();
 		slicer.plane.localToWorld(slicer.planePointA.copy(slicer.plane.geometry.vertices[slicer.plane.geometry.faces[0].a]));
@@ -79,7 +80,7 @@ export default class Slicer{
 			size: .5,
 			color: 0x00ff00
 		});
-		var points = new THREE.Points(slicer.pointsOfIntersection, slicer.pointsMaterial);
+		var points = new THREE.Points(slicer.pointsOfIntersection, pointsMaterial);
 		slicer.scene.add(points);
 
 		//var pairs = splitPairs(pointsOfIntersection.vertices);

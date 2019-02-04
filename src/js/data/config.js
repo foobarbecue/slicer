@@ -32,6 +32,10 @@ export default {
       emissive: 0xffffff
     }
   },
+	slicer:{
+  	posY: 0,
+		sliceit: function(){}
+	},
   fog: {
     color: 0xffffff,
     near: 0.0008
