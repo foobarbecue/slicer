@@ -46,11 +46,11 @@ export default {
     posZ: 40
   },
   controls: {
-    autoRotate: true,
+    autoRotate: false,
     autoRotateSpeed: -0.5,
     rotateSpeed: 0.5,
     zoomSpeed: 0.8,
-    minDistance: 200,
+    minDistance: 1,
     maxDistance: 600,
     minPolarAngle: Math.PI / 5,
     maxPolarAngle: Math.PI / 2,
@@ -66,11 +66,11 @@ export default {
     }
   },
   ambientLight: {
-    enabled: true,
+    enabled: false,
     color: 0x141414
   },
   directionalLight: {
-    enabled: true,
+    enabled: false,
     color: 0xf0f0f0,
     intensity: 0.4,
     x: -75,
@@ -78,7 +78,7 @@ export default {
     z: 150
   },
   shadow: {
-    enabled: true,
+    enabled: false,
     helperEnabled: true,
     bias: 0,
     mapWidth: 2048,
@@ -91,7 +91,7 @@ export default {
     left: -100
   },
   pointLight: {
-    enabled: true,
+    enabled: false,
     color: 0xffffff,
     intensity: 0.34,
     distance: 115,
@@ -100,7 +100,7 @@ export default {
     z: 0
   },
   hemiLight: {
-    enabled: true,
+    enabled: false,
     color: 0xc8c8c8,
     groundColor: 0xffffff,
     intensity: 0.55,

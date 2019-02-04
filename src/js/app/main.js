@@ -74,21 +74,6 @@ export default class Main {
     this.texture = new Texture();
 		// debugger;
 
-    // Start loading the textures and then go on to load the model after the texture Promises have resolved
-    this.texture.load().then(() => {
-      this.manager = new THREE.LoadingManager();
-
-      // Textures loaded, load model
-      this.model = new Model(this.scene, this.manager, this.texture.textures);
-      this.model.load();
-
-			// onProgress callback
-      this.manager.onProgress = (item, loaded, total) => {
-        console.log(`${item}: ${loaded} ${total}`);
-      };
-
-      // All loaders done now
-      this.manager.onLoad = () => {
         // Set up interaction manager with the app now that the model is finished loading
         new Interaction(this.renderer.threeRenderer, this.scene, this.camera.threeCamera, this.controls.threeControls);
 
@@ -97,14 +82,12 @@ export default class Main {
 
         // Add dat.GUI controls if dev
         if(Config.isDev) {
-          // new DatGUI(this, this.model.obj);
+          new DatGUI(this);
         }
 
         // Everything is now fully loaded
         Config.isLoaded = true;
-        this.container.querySelector('#loading').style.display = 'none';
-      };
-    });
+
 
     // Start render which does not wait for model fully loaded
     this.render();

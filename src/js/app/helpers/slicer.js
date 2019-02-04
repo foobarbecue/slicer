@@ -19,11 +19,11 @@ export default class Slicer{
 		slicer.plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({
 			color: "lightgray",
 			transparent: true,
-			opacity: 0.125,
+			opacity: 0.8,
 			side: THREE.DoubleSide
 		}));
-		slicer.plane.position.y = -2;
-		slicer.plane.rotation.x = Math.PI / 5;
+		slicer.plane.position.y = 1;
+		// slicer.plane.rotation.x = Math.PI / 5;
 		slicer.scene.add(slicer.plane);
 
 		slicer.objGeom = new THREE.TorusKnotGeometry(10, 3);
@@ -33,26 +33,26 @@ export default class Slicer{
 			wireframe: true
 		}));
 		slicer.obj.material.color.multiplyScalar(.5);
-		slicer.obj.rotation.z = Math.PI / 10;
-		slicer.obj.position.set(0, 3.14, 0);
+		// slicer.obj.rotation.z = Math.PI / 10;
+		slicer.obj.position.set(0, 0, 0);
 		slicer.scene.add(slicer.obj);
 
 
 		slicer.pointsOfIntersection = new THREE.Geometry();
 
-		slicer.a = new THREE.Vector3(),
-    slicer.b = new THREE.Vector3(),
+		slicer.a = new THREE.Vector3();
+    slicer.b = new THREE.Vector3();
     slicer.c = new THREE.Vector3();
-    slicer.planePointA = new THREE.Vector3(),
-    slicer.planePointB = new THREE.Vector3(),
+    slicer.planePointA = new THREE.Vector3();
+    slicer.planePointB = new THREE.Vector3();
     slicer.planePointC = new THREE.Vector3();
-    slicer.lineAB = new THREE.Line3(),
-    slicer.lineBC = new THREE.Line3(),
+    slicer.lineAB = new THREE.Line3();
+    slicer.lineBC = new THREE.Line3();
     slicer.lineCA = new THREE.Line3();
 
 		slicer.pointOfIntersection = new THREE.Vector3();
 
-		slicer.drawIntersectionPoints();
+		// slicer.drawIntersectionPoints();
 	}
 
 	drawIntersectionPoints() {
@@ -99,7 +99,8 @@ export default class Slicer{
 
 	setPointOfIntersection(line, plane, faceIdx) {
 		const slicer = this;
-		this.pointOfIntersection = plane.intersectLine(line);
+		let dummy = new THREE.Vector3()
+		slicer.pointOfIntersection = plane.intersectLine(line, dummy);
 		if (this.pointOfIntersection) {
 			let p = this.pointOfIntersection.clone();
 			p.faceIndex = faceIdx;
@@ -118,11 +119,11 @@ export default class Slicer{
 		// find first line for the contour
 		let firstPointIndex = 0;
 		let secondPointIndex = 0;
-		let firsPoint, secondPoint;
+		let firstPoint, secondPoint;
 		for (let i = 0; i < points.length; i++) {
 			if (points[i].checked == true) continue;
 			firstPointIndex = i;
-			let firstPoint = points[firstPointIndex];
+			firstPoint = points[firstPointIndex];
 			firstPoint.checked = true;
 			secondPointIndex = this.getPairIndex(firstPoint, firstPointIndex, points);
 			secondPoint = points[secondPointIndex];
