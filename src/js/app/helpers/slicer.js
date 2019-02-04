@@ -15,6 +15,7 @@ export default class Slicer{
 	slicer.scene = scene;
 	slicer.tolerance = 0.001;
 	this.compute = this.compute.bind(this);
+	this.reset = this.reset.bind(this);
 		const planeGeom = new THREE.PlaneGeometry(30, 30);
 		planeGeom.rotateX(-Math.PI / 2);
 		slicer.plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({
@@ -39,25 +40,31 @@ export default class Slicer{
 		slicer.scene.add(slicer.obj);
 
 
-		slicer.pointsOfIntersection = new THREE.Geometry();
-
-		slicer.a = new THREE.Vector3();
-    slicer.b = new THREE.Vector3();
-    slicer.c = new THREE.Vector3();
-    slicer.planePointA = new THREE.Vector3();
-    slicer.planePointB = new THREE.Vector3();
-    slicer.planePointC = new THREE.Vector3();
-    slicer.lineAB = new THREE.Line3();
-    slicer.lineBC = new THREE.Line3();
-    slicer.lineCA = new THREE.Line3();
-
-		slicer.pointOfIntersection = new THREE.Vector3();
+		// this.reset();
 
 		// slicer.drawIntersectionPoints();
 	}
 
+	reset(){
+		const slicer = this;
+		slicer.pointsOfIntersection = new THREE.Geometry();
+
+		slicer.a = new THREE.Vector3();
+		slicer.b = new THREE.Vector3();
+		slicer.c = new THREE.Vector3();
+		slicer.planePointA = new THREE.Vector3();
+		slicer.planePointB = new THREE.Vector3();
+		slicer.planePointC = new THREE.Vector3();
+		slicer.lineAB = new THREE.Line3();
+		slicer.lineBC = new THREE.Line3();
+		slicer.lineCA = new THREE.Line3();
+
+		slicer.pointOfIntersection = new THREE.Vector3();
+	}
+
 	compute(){
 		const slicer = this;
+		slicer.reset();
 		const mathPlane = new THREE.Plane();
 		slicer.plane.localToWorld(slicer.planePointA.copy(slicer.plane.geometry.vertices[slicer.plane.geometry.faces[0].a]));
 		slicer.plane.localToWorld(slicer.planePointB.copy(slicer.plane.geometry.vertices[slicer.plane.geometry.faces[0].b]));
@@ -76,16 +83,17 @@ export default class Slicer{
 			slicer.setPointOfIntersection(slicer.lineCA, mathPlane, idx);
 		});
 
-		var pointsMaterial = new THREE.PointsMaterial({
+		let pointsMaterial = new THREE.PointsMaterial({
 			size: .5,
 			color: 0x00ff00
 		});
-		var points = new THREE.Points(slicer.pointsOfIntersection, pointsMaterial);
+		let points = new THREE.Points(slicer.pointsOfIntersection, pointsMaterial);
 		slicer.scene.add(points);
+		console.log(points)
 
 		//var pairs = splitPairs(pointsOfIntersection.vertices);
 
-		var contours = slicer.getContours(slicer.pointsOfIntersection.vertices, [], true);
+		const contours = slicer.getContours(slicer.pointsOfIntersection.vertices, [], true);
 		console.log("contours", contours);
 
 		contours.forEach(cntr => {

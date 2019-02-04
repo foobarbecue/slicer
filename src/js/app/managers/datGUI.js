@@ -83,7 +83,9 @@ export default class DatGUI {
 
     /* Slicing */
     const sliceFolder = gui.addFolder('Cross sections');
-    sliceFolder.add(Config.slicer, 'posY');
+    sliceFolder.add(Config.slicer, 'posY').onChange((value)=>{
+    	main.slicer.plane.position.setY(value)
+		});
 		sliceFolder.add({sliceit: main.slicer.compute}, 'sliceit');
 
 
