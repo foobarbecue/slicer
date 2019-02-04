@@ -33,8 +33,6 @@ export default class Model {
               child.receiveShadow = true;
               child.castShadow = true;
             }
-            //TODO remove it for real
-            child.visible = false;
           }
         });
 

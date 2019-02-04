@@ -59,10 +59,10 @@ export default class Main {
     const lights = ['ambient', 'directional', 'point', 'hemi'];
     lights.forEach((light) => this.light.place(light));
 
-    // Create and place geo in scene
-    // this.geometry = new Geometry(this.scene);
-    // this.geometry.make('plane')(150, 150, 10, 10);
-    // this.geometry.place([0, -20, 0], [Math.PI / 2, 0, 0]);
+    // Create ground plane
+    this.groundPlane = new Geometry(this.scene);
+    this.groundPlane.make('plane')(150, 150, 10, 10);
+    this.groundPlane.place([0, -20, 0], [Math.PI / 2, 0, 0]);
 
     // Set up rStats if dev environment
     if(Config.isDev && Config.isShowingStats) {
@@ -72,22 +72,47 @@ export default class Main {
 
     // Instantiate texture class
     this.texture = new Texture();
-		// debugger;
 
+    // Start loading the textures and then go on to load the model after the texture Promises have resolved
+    this.texture.load().then(() => {
+      this.manager = new THREE.LoadingManager();
+
+      // Textures loaded, load model
+      this.model = new Model(this.scene, this.manager, this.texture.textures);
+      this.model.load();
+
+      // onProgress callback
+      this.manager.onProgress = (item, loaded, total) => {
+        console.log(`${item}: ${loaded} ${total}`);
+      };
+
+      // All loaders done now
+      this.manager.onLoad = () => {
         // Set up interaction manager with the app now that the model is finished loading
         new Interaction(this.renderer.threeRenderer, this.scene, this.camera.threeCamera, this.controls.threeControls);
 
 				// Load slicer
-        this.slicer = new Slicer(this.scene);
+        this.slicePlane = new THREE.Mesh(
+          new THREE.PlaneGeometry(100, 100),
+          new THREE.MeshStandardMaterial({side:THREE.DoubleSide, color: 0xff0000})
+          );
+        // const slicePlaneGeom = new THREE.Geometry();
+        // this.slicePlane.geometry = slicePlaneGeom.fromBufferGeometry(this.slicePlane.geometry);
+
+        this.scene.add(this.slicePlane);
+        this.slicePlane.rotateX(Math.PI/2);
+        this.slicer = new Slicer(this.scene, this.model.obj, this.slicePlane);
 
         // Add dat.GUI controls if dev
         if(Config.isDev) {
-          new DatGUI(this);
+          new DatGUI(this, this.model.obj);
         }
 
         // Everything is now fully loaded
         Config.isLoaded = true;
-
+        this.container.querySelector('#loading').style.display = 'none';
+      };
+    });
 
     // Start render which does not wait for model fully loaded
     this.render();

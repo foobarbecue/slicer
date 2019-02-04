@@ -10,45 +10,23 @@ THREE.Vector3.prototype.equals = function(v, tolerance) {
 };
 
 export default class Slicer{
-	constructor(scene) {
+	constructor(scene, obj, slicePlane) {
+		if (obj.geometry.isBufferGeometry){
+			let geom = new THREE.Geometry();
+			obj.geometry = geom.fromBufferGeometry(obj.geometry);
+		}
 	const slicer = this;
 	slicer.scene = scene;
+	slicer.obj = obj;
+	slicer.slicePlane = slicePlane;
 	slicer.tolerance = 0.001;
 	this.compute = this.compute.bind(this);
 	this.reset = this.reset.bind(this);
-		const planeGeom = new THREE.PlaneGeometry(30, 30);
-		planeGeom.rotateX(-Math.PI / 2);
-		slicer.plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({
-			color: "lightgray",
-			transparent: true,
-			opacity: 0.8,
-			side: THREE.DoubleSide
-		}));
-		slicer.plane.position.y = 1;
-		// slicer.plane.rotation.x = Math.PI / 5;
-		slicer.scene.add(slicer.plane);
-
-		slicer.objGeom = new THREE.TorusKnotGeometry(10, 3);
-
-		slicer.obj = new THREE.Mesh(slicer.objGeom, new THREE.MeshBasicMaterial({
-			color: "blue",
-			wireframe: true
-		}));
-		slicer.obj.material.color.multiplyScalar(.5);
-		// slicer.obj.rotation.z = Math.PI / 10;
-		slicer.obj.position.set(0, 0, 0);
-		slicer.scene.add(slicer.obj);
-
-
-		// this.reset();
-
-		// slicer.drawIntersectionPoints();
 	}
 
 	reset(){
 		const slicer = this;
 		slicer.pointsOfIntersection = new THREE.Geometry();
-
 		slicer.a = new THREE.Vector3();
 		slicer.b = new THREE.Vector3();
 		slicer.c = new THREE.Vector3();
@@ -58,7 +36,6 @@ export default class Slicer{
 		slicer.lineAB = new THREE.Line3();
 		slicer.lineBC = new THREE.Line3();
 		slicer.lineCA = new THREE.Line3();
-
 		slicer.pointOfIntersection = new THREE.Vector3();
 	}
 
@@ -66,9 +43,9 @@ export default class Slicer{
 		const slicer = this;
 		slicer.reset();
 		const mathPlane = new THREE.Plane();
-		slicer.plane.localToWorld(slicer.planePointA.copy(slicer.plane.geometry.vertices[slicer.plane.geometry.faces[0].a]));
-		slicer.plane.localToWorld(slicer.planePointB.copy(slicer.plane.geometry.vertices[slicer.plane.geometry.faces[0].b]));
-		slicer.plane.localToWorld(slicer.planePointC.copy(slicer.plane.geometry.vertices[slicer.plane.geometry.faces[0].c]));
+		slicer.slicePlane.localToWorld(slicer.planePointA.copy(slicer.slicePlane.geometry.vertices[slicer.slicePlane.geometry.faces[0].a]));
+		slicer.slicePlane.localToWorld(slicer.planePointB.copy(slicer.slicePlane.geometry.vertices[slicer.slicePlane.geometry.faces[0].b]));
+		slicer.slicePlane.localToWorld(slicer.planePointC.copy(slicer.slicePlane.geometry.vertices[slicer.slicePlane.geometry.faces[0].c]));
 		mathPlane.setFromCoplanarPoints(slicer.planePointA, slicer.planePointB, slicer.planePointC);
 
 		slicer.obj.geometry.faces.forEach(function(face, idx) {
@@ -89,7 +66,7 @@ export default class Slicer{
 		});
 		let points = new THREE.Points(slicer.pointsOfIntersection, pointsMaterial);
 		slicer.scene.add(points);
-		console.log(points)
+		console.log(points);
 
 		//var pairs = splitPairs(pointsOfIntersection.vertices);
 
